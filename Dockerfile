@@ -7,10 +7,7 @@ RUN npm ci
 COPY . .
 
 # production step
-FROM alpine:3.19
-RUN apk add --update nodejs
-RUN addgroup  -S node && adduser -S node -G node
-USER node
-WORKDIR /home/node/code
-COPY --from=node-builder --chown=node:node /build .
-CMD ["node", "index.js"]
+FROM gcr.io/distroless/nodejs20
+COPY --from=node-builder --chown=node:node /build /app
+WORKDIR /app
+CMD ["index.js"]
